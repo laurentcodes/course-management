@@ -57,3 +57,9 @@ export const enrollStudent = async (value) => {
 
 	return data;
 };
+
+export const unEnrollStudent = async (value) => {
+	const { data } = await axios.patch('/api/students', value);
+
+	return data;
+};

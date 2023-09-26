@@ -31,9 +31,36 @@ const handler = async (req, res) => {
 
 				const courseIds = user.courses;
 
-				const courses = await Course.find({
-					_id: { $in: courseIds },
-				});
+				const courses = await Course.aggregate([
+					{
+						$match: {
+							_id: { $in: courseIds },
+						},
+					},
+					{
+						$lookup: {
+							from: 'users',
+							localField: 'tutor',
+							foreignField: '_id',
+							as: 'tutor',
+						},
+					},
+					{
+						$unwind: '$tutor',
+					},
+					{
+						$project: {
+							_id: 1,
+							title: 1,
+							code: 1,
+							description: 1,
+							tutor: {
+								_id: '$tutor._id',
+								name: '$tutor.name',
+							},
+						},
+					},
+				]);
 
 				res.status(200).json({ data: courses, total: courses.length });
 			} catch (err) {
@@ -86,6 +113,62 @@ const handler = async (req, res) => {
 				res.status(201).json({
 					status: res.statusCode,
 					message: 'Course Enrolled Successfully!',
+				});
+			} catch (err) {
+				res.status(500).send({
+					message: err.message || 'Server Error',
+					code: err.code || 500,
+				});
+			}
+		}
+	} else if (method === 'PATCH') {
+		let token;
+
+		if (
+			req.headers.authorization &&
+			req.headers.authorization.startsWith('Bearer')
+		) {
+			try {
+				token = req.headers.authorization.split(' ')[1];
+
+				const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+				let user = await User.findById(decoded.id).select('-password');
+
+				const courseIds = user.courses;
+
+				if (user.type !== 'student') {
+					throw new CustomError(
+						'Error',
+						400,
+						'Only Students can enroll to Courses.'
+					);
+				}
+
+				let courses = await Course.find({
+					_id: { $in: courseIds },
+				});
+
+				if (!courses) {
+					throw new CustomError('Error', 400, 'No Courses Enrolled.');
+				}
+
+				if (!user.courses.includes(id)) {
+					throw new CustomError(
+						'Error',
+						400,
+						'This Course hasnt  been Enrolled for.'
+					);
+				}
+
+				user = await User.updateOne(
+					{ _id: user._id },
+					{ $pull: { courses: id } }
+				);
+
+				res.status(201).json({
+					status: res.statusCode,
+					message: 'Course Removed Successfully!',
 				});
 			} catch (err) {
 				res.status(500).send({

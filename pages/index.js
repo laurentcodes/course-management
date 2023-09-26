@@ -11,6 +11,7 @@ import {
 	getStudentCourses,
 	createCourse,
 	enrollStudent,
+	unEnrollStudent,
 } from './api/services';
 
 export default function Home() {
@@ -69,6 +70,18 @@ export default function Home() {
 		e.preventDefault();
 
 		enrollStudent({ id: enroll })
+			.then((res) => {
+				console.log(res);
+			})
+			.catch((err) => console.log(err));
+	};
+
+	const onSubmitUnEnroll = (value) => {
+		// e.preventDefault();
+
+		// console.log(value);
+
+		unEnrollStudent({ id: value })
 			.then((res) => {
 				console.log(res);
 			})
@@ -198,6 +211,17 @@ export default function Home() {
 										</p>
 
 										<p>{course.description}</p>
+
+										<p className='text-[#748cab] font-bold'>
+											Tutor: {course.tutor.name}
+										</p>
+
+										<button
+											className='bg-red-500 text-white py-1 px-3 my-1 rounded-lg w-full'
+											onClick={() => onSubmitUnEnroll(course._id)}
+										>
+											Remove
+										</button>
 									</div>
 								))}
 						</div>
