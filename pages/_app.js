@@ -19,7 +19,7 @@ export default function App({ Component, pageProps }) {
 	}, []);
 
 	return (
-		<>
+		<div className='h-screen'>
 			<header className='flex justify-between p-6 bg-[#1d2d44] text-white'>
 				<h2 className='text-2xl fontbo'>C0urse</h2>
 
@@ -37,6 +37,6 @@ export default function App({ Component, pageProps }) {
 				<Component {...pageProps} />
 			</section>
 			<ToastContainer />
-		</>
+		</div>
 	);
 }
