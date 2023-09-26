@@ -98,24 +98,23 @@ const handler = async (req, res) => {
 					throw new CustomError('Error', 400, 'This Course Does not Exist.');
 				}
 
-				if (user.courses.includes(id)) {
-					throw new CustomError(
-						'Error',
-						400,
-						'This Course has already been Enrolled.'
-					);
+				if (!user.courses.includes(id)) {
+					user.courses.push(id);
+
+					await user.save();
+
+					res.status(201).json({
+						status: res.statusCode,
+						message: 'Course Enrolled Successfully!',
+					});
+				} else {
+					res.status(400).json({
+						status: res.statusCode,
+						message: 'This Course has already been Enrolled.',
+					});
 				}
-
-				user.courses.push(id);
-
-				await user.save();
-
-				res.status(201).json({
-					status: res.statusCode,
-					message: 'Course Enrolled Successfully!',
-				});
 			} catch (err) {
-				res.status(500).send({
+				res.status(500).json({
 					message: err.message || 'Server Error',
 					code: err.code || 500,
 				});
@@ -171,14 +170,14 @@ const handler = async (req, res) => {
 					message: 'Course Removed Successfully!',
 				});
 			} catch (err) {
-				res.status(500).send({
+				res.status(500).json({
 					message: err.message || 'Server Error',
 					code: err.code || 500,
 				});
 			}
 		}
 	} else {
-		res.status(405).send({ message: 'Invalid' });
+		res.status(405).json({ message: 'Invalid' });
 	}
 };
 

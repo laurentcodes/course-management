@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
 
 import authStore from '../store';
 
@@ -61,9 +62,15 @@ export default function Home() {
 
 		createCourse({ title, code, description })
 			.then((res) => {
-				console.log(res);
+				toast.success(res.message, {
+					position: toast.POSITION.TOP_RIGHT,
+				});
 			})
-			.catch((err) => console.log(err));
+			.catch((err) => {
+				toast.error(err.message, {
+					position: toast.POSITION.TOP_RIGHT,
+				});
+			});
 	};
 
 	const onSubmitEnroll = (e) => {
@@ -71,21 +78,31 @@ export default function Home() {
 
 		enrollStudent({ id: enroll })
 			.then((res) => {
-				console.log(res);
+				toast.success(res.message, {
+					position: toast.POSITION.TOP_RIGHT,
+				});
 			})
-			.catch((err) => console.log(err));
+			.catch((err) => {
+				console.log(err);
+
+				toast.error('You have already enrolled for this course.', {
+					position: toast.POSITION.TOP_RIGHT,
+				});
+			});
 	};
 
 	const onSubmitUnEnroll = (value) => {
-		// e.preventDefault();
-
-		// console.log(value);
-
 		unEnrollStudent({ id: value })
 			.then((res) => {
-				console.log(res);
+				toast.success(res.message, {
+					position: toast.POSITION.TOP_RIGHT,
+				});
 			})
-			.catch((err) => console.log(err));
+			.catch((err) => {
+				toast.error(err.response.data.message, {
+					position: toast.POSITION.TOP_RIGHT,
+				});
+			});
 	};
 
 	return (
@@ -178,8 +195,8 @@ export default function Home() {
 				</main>
 			) : (
 				<main className='flex w-full flex-col md:flex-row justify-between'>
-					<div className='flex gap-4'>
-						<div className='basis-1/2'>
+					{/* <div className='flex gap-4'> */}
+					{/* <div className='basis-1/2'>
 							<h2 className='font-bold text-2xl'>Available Courses</h2>
 
 							{courses &&
@@ -195,37 +212,37 @@ export default function Home() {
 										<p>{course.description}</p>
 									</div>
 								))}
-						</div>
+						</div> */}
 
-						<div className='basis-1/2'>
-							<h2 className='font-bold text-2xl'>Enrolled Courses</h2>
+					<div className='basis-1/2'>
+						<h2 className='font-bold text-2xl'>Enrolled Courses</h2>
 
-							{studentCourses &&
-								studentCourses.map((course) => (
-									<div
-										key={course._id}
-										className='border-2 py-2 px-4 my-2 rounded-lg border-[#748cab] w-full md:w-56'
+						{studentCourses &&
+							studentCourses.map((course) => (
+								<div
+									key={course._id}
+									className='border-2 py-2 px-4 my-2 rounded-lg border-[#748cab] w-full md:w-96'
+								>
+									<p className='font-bold'>
+										{course.code} - {course.title}
+									</p>
+
+									<p>{course.description}</p>
+
+									<p className='text-[#748cab] font-bold'>
+										Tutor: {course.tutor.name}
+									</p>
+
+									<button
+										className='bg-red-500 text-white py-1 px-3 my-1 rounded-lg w-full md:w-1/2'
+										onClick={() => onSubmitUnEnroll(course._id)}
 									>
-										<p className='font-bold'>
-											{course.code} - {course.title}
-										</p>
-
-										<p>{course.description}</p>
-
-										<p className='text-[#748cab] font-bold'>
-											Tutor: {course.tutor.name}
-										</p>
-
-										<button
-											className='bg-red-500 text-white py-1 px-3 my-1 rounded-lg w-full'
-											onClick={() => onSubmitUnEnroll(course._id)}
-										>
-											Remove
-										</button>
-									</div>
-								))}
-						</div>
+										Remove
+									</button>
+								</div>
+							))}
 					</div>
+					{/* </div> */}
 
 					<div className='mt-12 md:mt-0 text-left basis-1/2'>
 						<h2 className='font-bold text-2xl text-left my-3'>
@@ -238,7 +255,7 @@ export default function Home() {
 									htmlFor='type'
 									className='block mb-2 text-sm font-medium text-gray-900 '
 								>
-									User Type
+									Course
 								</label>
 								<select
 									id='type'

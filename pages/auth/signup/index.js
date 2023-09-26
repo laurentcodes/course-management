@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
 
 import { signUp } from '@/pages/api/services';
 
@@ -23,9 +24,18 @@ export default function Login() {
 		signUp({ name, email, password, type })
 			.then((res) => {
 				login(res);
+
+				toast.success('Welcome!', {
+					position: toast.POSITION.TOP_RIGHT,
+				});
+
 				router.push('/');
 			})
-			.catch((err) => console.log(err));
+			.catch((err) => {
+				toast.error('Error', {
+					position: toast.POSITION.TOP_RIGHT,
+				});
+			});
 	};
 
 	return (

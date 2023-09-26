@@ -33,7 +33,7 @@ const handler = async (req, res) => {
 				throw new CustomError('Error', 401, 'Invalid email and password.');
 			}
 		} catch (err) {
-			res.status(500).json({
+			res.status(err.code || 500).json({
 				message: err.message || 'Server Error',
 				code: err.code || 500,
 			});

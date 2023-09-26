@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
 
 import { signIn } from '@/pages/api/services';
 
@@ -21,9 +22,18 @@ export default function Login() {
 		signIn({ email, password })
 			.then((res) => {
 				login(res);
+
+				toast.success('Welcome!', {
+					position: toast.POSITION.TOP_RIGHT,
+				});
+
 				router.push('/');
 			})
-			.catch((err) => console.log(err));
+			.catch((err) => {
+				toast.error('Invalid Credentials', {
+					position: toast.POSITION.TOP_RIGHT,
+				});
+			});
 	};
 
 	return (

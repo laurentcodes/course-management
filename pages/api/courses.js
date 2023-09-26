@@ -33,7 +33,7 @@ const handler = async (req, res) => {
 
 				res.status(200).json({ data: courses, total: courses.length });
 			} catch (err) {
-				res.status(500).send({
+				res.status(500).json({
 					message: err.message || 'Server Error',
 					code: err.code || 500,
 				});
@@ -82,14 +82,14 @@ const handler = async (req, res) => {
 					message: 'Course Created Successfully!',
 				});
 			} catch (err) {
-				res.status(500).send({
+				res.status(500).json({
 					message: err.message || 'Server Error',
 					code: err.code || 500,
 				});
 			}
 		}
 	} else {
-		res.status(405).send({ message: 'Invalid' });
+		res.status(405).json({ message: 'Invalid' });
 	}
 };
 

@@ -13,6 +13,19 @@ axios.interceptors.request.use(
 	(error) => Promise.reject(error)
 );
 
+axios.interceptors.response.use(
+	(response) => {
+		return response;
+	},
+	(error) => {
+		if (error.response.status === 500) {
+			localStorage.removeItem('courseToken');
+			localStorage.removeItem('courseUser');
+			localStorage.removeItem('courseAuthenticated');
+		}
+	}
+);
+
 // USERS
 export const signIn = async (value) => {
 	const { data } = await axios.post('/api/login', value);
