@@ -10,7 +10,7 @@ import authStore from '@/store';
 export default function App({ Component, pageProps }) {
 	const [clientMounted, setClientMounted] = useState(false);
 
-	const isAuthenticated = authStore((state) => state.user);
+	const isAuthenticated = authStore((state) => state.isAuthenticated);
 	const user = authStore((state) => state.user);
 	const logout = authStore((state) => state.logout);
 

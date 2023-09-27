@@ -32,7 +32,7 @@ const TutorPage = ({
 				<h2 className='font-bold text-2xl text-left my-3'>Create New Course</h2>
 
 				<form onSubmit={onSubmit}>
-					<div className='mb-6 w-96'>
+					<div className='mb-6 w-full md:w-96'>
 						<label
 							htmlFor='title'
 							className='block mb-2 text-sm font-medium text-gray-900 '
@@ -50,7 +50,7 @@ const TutorPage = ({
 						/>
 					</div>
 
-					<div className='mb-6 w-96'>
+					<div className='mb-6 w-full md:w-96'>
 						<label
 							htmlFor='code'
 							className='block mb-2 text-sm font-medium text-gray-900 '
@@ -68,7 +68,7 @@ const TutorPage = ({
 						/>
 					</div>
 
-					<div className='mb-6 w-96'>
+					<div className='mb-6 w-full md:w-96'>
 						<label
 							htmlFor='description'
 							className='block mb-2 text-sm font-medium text-gray-900 '
